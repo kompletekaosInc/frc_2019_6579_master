@@ -7,17 +7,14 @@
 
 package frc.robot.subsystem;
 
-//import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.Spark;
-//import edu.wpi.first.wpilibj.VictorSP;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.VictorSP;
 
 /**
  * Created by Ollie 1/25/19
  */
 public class Carridge implements SubSystem {
 
-  Spark shootOut = new Spark(5);
+  VictorSP shootOut = new VictorSP(8);
 //  boolean pressureSwitchEnabled = compressor.getPressureSwitchValue();
 //  double compressorCurrent = compressor.getCompressorCurrent();
 

@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -12,7 +12,8 @@ import java.util.logging.Logger;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,11 +33,16 @@ public class Drivetrain implements SubSystem {
 
 
   //Motor Controllers (ports can be changed)
-  private Spark leftToughbox = new Spark(0);
-  private Spark rightToughbox = new Spark(1);
+  private VictorSP leftTB1 = new VictorSP(0);
+  private VictorSP leftTB2 = new VictorSP(1);
+  private SpeedControllerGroup leftTB = new SpeedControllerGroup(leftTB1, leftTB2);
+
+  private VictorSP rightTB1 = new VictorSP(2);
+  private VictorSP rightTB2 = new VictorSP(3);
+  private SpeedControllerGroup rightTB = new SpeedControllerGroup(rightTB1, rightTB2);
 
   //init the drivetrain
-  private DifferentialDrive robotDrive = new DifferentialDrive(leftToughbox, rightToughbox);
+  private DifferentialDrive robotDrive = new DifferentialDrive(leftTB, rightTB);
 
   //neccasary numbers
  // private double distancePerPulse = 0.2493639169;
@@ -81,9 +87,9 @@ public class Drivetrain implements SubSystem {
   */
   public void setPower(double leftPower, double rightPower){
     //sets the left toughbox
-    leftToughbox.set(-leftPower);
+    leftTB.set(-leftPower);
     //sets the right toughbox
-    rightToughbox.set(rightPower);
+    rightTB.set(rightPower);
     SmartDashboard.putNumber("Power", (rightPower+leftPower)/2);
   }
 
@@ -105,19 +111,19 @@ public class Drivetrain implements SubSystem {
 
 //    double gyroAtStop = mr_gyro.getAngle();
 
-    logger.info("hardstop: initial (leftToughbox:Right) = (" + leftToughbox.get() + ":" + rightToughbox.get() + ")");
+    logger.info("hardstop: initial (leftToughbox:Right) = (" + leftTB.get() + ":" + rightTB.get() + ")");
     double leftStopPower;
     double rightStopPower;
 
     //begin wierdness for the hardstop code
     //left toughbox
-    if(leftToughbox.get()>0){
+    if(leftTB.get()>0){
       leftStopPower = -0.1;
     } else {
       leftStopPower = 0.1;
     }
     //right toughbox
-    if(rightToughbox.get()>0){
+    if(rightTB.get()>0){
       rightStopPower = -0.1;
     } else {
       rightStopPower = 0.1;
@@ -128,10 +134,10 @@ public class Drivetrain implements SubSystem {
     while(System.currentTimeMillis()-beginTimedHardStop < 25){
 
       setPower(leftStopPower, rightStopPower);
-      logger.fine("hardStop:current (leftToughbox:right) = (" + leftToughbox.get() + ":" + rightToughbox.get() + ")");
+      logger.fine("hardStop:current (leftToughbox:right) = (" + leftTB.get() + ":" + rightTB.get() + ")");
     }
     stop();
-    logger.info("hardStop:end (leftToughbox:right) = (" + leftToughbox.get() + ":" + rightToughbox.get() + ")");
+    logger.info("hardStop:end (leftToughbox:right) = (" + leftTB.get() + ":" + rightTB.get() + ")");
     logger.info("hardStop finished, but was it successful...");
   }
 
@@ -178,8 +184,8 @@ public class Drivetrain implements SubSystem {
     double gyroMotorPowerLeft = -power - gyroPowerAdjustment;
     double gyroMotorPowerRight = power - gyroPowerAdjustment;
     //force the unwilling motors to move, against there super-lazy will
-    leftToughbox.set(gyroMotorPowerLeft);
-    rightToughbox.set(gyroMotorPowerRight);
+    leftTB.set(gyroMotorPowerLeft);
+    rightTB.set(gyroMotorPowerRight);
   }
 
    //finished gyro code
@@ -259,8 +265,8 @@ public class Drivetrain implements SubSystem {
   @Override
   public void publishStats() {
     SmartDashboard.putNumber("Drivetrain: gyro ",getGyroAngle());
-    SmartDashboard.putNumber("Drivetrain Left Toughbox power",leftToughbox.get());
-    SmartDashboard.putNumber("Drivetrain Right Toughbox power", rightToughbox.get());
+    SmartDashboard.putNumber("Drivetrain Left Toughbox power",leftTB.get());
+    SmartDashboard.putNumber("Drivetrain Right Toughbox power", rightTB.get());
 
   }
 

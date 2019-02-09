@@ -7,7 +7,6 @@
 
 package frc.robot.subsystem.intakes;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.robot.subsystem.SubSystem;
 
 /**
