@@ -7,6 +7,7 @@
 
 package frc.robot.control;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
 /**
@@ -18,56 +19,14 @@ public class OperatorControl extends JoystickControl {
         super(1);
     }
 
-    private void processStickButtons(Robot robot){
-
-        if(stick.getRawButton(1)){
-            processButton1(robot);
-        }
-        else if (stick.getRawButton(2)){
-            processButton2(robot);
-        }
-        else if (stick.getRawButton(3)){
-            processButton3(robot);
-        }
-        else if (stick.getRawButton(4)){
-            processButton4(robot);
-        }
-        else if (stick.getRawButton(5)){
-           processButton5(robot);
-        }
-        else if (stick.getRawButton(6)){
-            processButton6(robot);
-        }
-        else if (stick.getRawButton(7)){
-            processButton7(robot);
-        }
-        else if (stick.getRawButton(8)){
-            processButton8(robot);
-        }
-        else if (stick.getRawButton(9)){
-            processButton9(robot);
-        }
-        else if (stick.getRawButton(10)){
-            processButton10(robot);
-        }
-        else if (stick.getRawButton(11)){
-            processButton11(robot);
-        }
-        else if (stick.getRawButton(12)){
-            processButton12(robot);
-        }
-        else{
-            processNoButtons(robot);
-        }
-    }
-
       /**
      * Process any specific events for button 1 on the joystick.
      * @param robot
      */
     protected void processButton1( Robot robot )
     {
-        //This is the opportunity for a subclass to create button one
+        robot.getBall_intake().intakeSuckIn(.8);
+        robot.getCarridge().takeIn(.3);
     }
     /**
      * Process any specific events for button 2 on the joystick.
@@ -75,7 +34,7 @@ public class OperatorControl extends JoystickControl {
      */
     protected void processButton2(Robot robot )
     {
-        //This is the opportunity for a subclass to create button two
+       
     }
     /**
      * Process any specific events for button 3 on the joystick.
@@ -83,7 +42,6 @@ public class OperatorControl extends JoystickControl {
      */
     protected void processButton3( Robot robot )
     {
-        //This is the opportunity for a subclass to create button three
     }
     /**
      * Process any specific events for button 4 on the joystick.
@@ -91,7 +49,6 @@ public class OperatorControl extends JoystickControl {
      */
     protected void processButton4( Robot robot )
     {
-        //This is the opportunity for a subclass to create button four
     }
     /**
      * Process any specific events for button 5 on the joystick.
@@ -115,7 +72,8 @@ public class OperatorControl extends JoystickControl {
      */
     protected void processButton7( Robot robot )
     {
-        //This is the opportunity for a subclass to create button seven
+        robot.getLift().liftUp(1);
+        SmartDashboard.putString("Lift Direction: ","up");
     }
     /**
      * Process any specific events for button 8 on the joystick.
@@ -123,7 +81,8 @@ public class OperatorControl extends JoystickControl {
      */
     protected void processButton8( Robot robot )
     {
-        //This is the opportunity for a subclass to create button eight
+        robot.getLift().liftDown(1);
+        SmartDashboard.putString("Lift Direction: ", "down");
     }
     /**
      * Process any specific events for button 9 on the joystick.
@@ -147,15 +106,14 @@ public class OperatorControl extends JoystickControl {
      */
     protected void processButton11( Robot robot )
     {
-        //This is the opportunity for a subclass to create button eleven
+
     }
-    /**
+    /** 
      * Process any specific events for button 12 on the joystick.
      * @param robot
      */
     protected void processButton12( Robot robot )
     {
-        //This is the opportunity for a subclass to create button twelve
     }
     /**
      * Process any specific events for no buttons on the joystick.
@@ -164,5 +122,11 @@ public class OperatorControl extends JoystickControl {
     protected void processNoButtons( Robot robot )
     {
         //This is the opportunity for a subclass to create no button
+        robot.getBall_intake().intakeSuckIn(0);
+        robot.getBall_intake().intakeUp(0);
+        robot.getCarridge().takeIn(0);
+        robot.getLift().liftUp(0);
+        robot.getLift().liftDown(0);
+        SmartDashboard.putString("Lift Direction: ", "Stopped");
     }
 }

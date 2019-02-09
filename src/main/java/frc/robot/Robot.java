@@ -7,56 +7,170 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.Timer;
+
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
+import frc.robot.control.DriverControl;
+import frc.robot.control.OperatorControl;
+import frc.robot.control.RobotControl;
+import frc.robot.subsystem.Carridge;
+import frc.robot.subsystem.Drivetrain;
+import frc.robot.subsystem.Lift;
+import frc.robot.subsystem.intakes.Ball_intake;
+import frc.robot.subsystem.intakes.Hatch_Intake;
 
 /**
- * This is a demo program showing the use of the RobotDrive class, specifically
- * it contains the code necessary to operate a robot with tank drive.
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the TimedRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
+ * 
+ * Created 1/19/19 By Ollie 
  */
 public class Robot extends TimedRobot {
-  private DifferentialDrive m_myRobot;
-  private Joystick m_leftStick;
 
-  private VictorSP intake;
-  private VictorSP lift;
-  private VictorSP up_down;
+  //create subsystem variables
+  private Hatch_Intake hatch = null;
+  private Ball_intake ball = null;
+  private Lift lift = null; 
+  private Carridge carridge = null;
+  private Drivetrain drivetrain = null;
+  private double number = 0;
 
+
+  //Add ShuffleBoard Tabs
+  ShuffleboardTab debug = Shuffleboard.getTab("Debugging");
+ 
+  //Intiliase contorl variables
+  private RobotControl robotControl;
+  private RobotControl operatorControl;
+
+  private final Timer m_timer = new Timer();
+
+  /**
+   * This function is run when the robot is first started up and should be
+   * used for any initialization code.
+   */
   @Override
   public void robotInit() {
-    m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
-    m_leftStick = new Joystick(0);
-    intake = new VictorSP(7);
-    lift = new VictorSP(4);
-    up_down = new VictorSP(6);
+    DateFormat dateformat = new SimpleDateFormat("YYYY/MM/DD HH:mm:ss");
+    Date date = new Date();
+    System.out.println("robot Init: [Build=Ollie,compDay1]" + dateformat.format(date));
 
-    
+    try{
+      hatch = new Hatch_Intake();
+      ball = new Ball_intake();
+      lift = new Lift();
+      carridge = new Carridge();
+      drivetrain = new Drivetrain();
+
+      Shuffleboard.getTab("Debugging").add("Are the subsystems ready?", true);
+    }catch(Exception e){
+        System.out.println("Error loading subsystems, Robot said sorry :(");
+        e.getStackTrace();
+        Shuffleboard.getTab("Debugging").add(("Are the subsystems ready?"), false);
     }
-  
 
+    //assume this is port 0
+    try {
+      robotControl = new DriverControl();
+      Shuffleboard.getTab("Debugging").add("Are the driver controls happy", true);
+      Shuffleboard.getTab("Debugging").add("Stick X", number);
+    } catch (Exception e) {
+      System.out.println("The joystick doesn't like this computer :|");
+      Shuffleboard.getTab("Debugging").add("Are the driver controls happy", false);
+      e.getStackTrace();
+    }
+    //assume this is port 1
+    try {
+      operatorControl = new OperatorControl();
+      Shuffleboard.getTab("Debugging").add("Are the operator controls happy", true);
+    } catch (Exception e){
+      System.out.println("The joystick doesn't like this computer :|");
+      Shuffleboard.getTab("Debugging").add("Are the operator controls happy", false);
+    }
+  }
+
+  /**
+   * This function is run once each time the robot enters autonomous mode.
+   */
+  @Override
+  public void autonomousInit() {
+    m_timer.reset();
+    m_timer.start();
+  }
+//Insert Dank meme here... /kill @a /tp harri nathanial /give Lucas dirt block 1 5 {CustomName: Bad Thing}
+  /**
+   * This function is called periodically during autonomous.
+   */
+  @Override
+  public void autonomousPeriodic() {
+    // Drive for 2 seconds
+  }
+
+  /**
+   * This function is called once each time the robot enters teleoperated mode.
+   */
+  @Override
+  public void teleopInit() {
+    resetSensors();
+  //  DateFormat dateformat = new SimpleDateFormat("YYYY/MM/DD HH:MM:SS");
+//    Date date = new Date();
+    System.out.println("teleopInit: [build=Ollie]");
+    resetSensors();
+  }
+
+  //resets all sensors on the robot
+  private void resetSensors(){
+    try {
+      drivetrain.resetGyro();
+    //  lift.resetEncoder();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+  }
+  /**
+   * This function is called periodically during teleoperated mode.
+   */
   @Override
   public void teleopPeriodic() {
-    m_myRobot.arcadeDrive(m_leftStick.getY(), m_leftStick.getX());
-    if(m_leftStick.getRawButton(11)){
-      up_down.set(.3);
-    } else if(m_leftStick.getRawButton(12)){
-      up_down.set(-.3);
-    } else if(m_leftStick.getRawButton(9)){
-      up_down.set(.4);
-    } else if(m_leftStick.getRawButton(10)){
-      up_down.set(-.4);
-    } else if(m_leftStick.getRawButton(7)){
-      up_down.set(.5);
-    } else if(m_leftStick.getRawButton(8)){
-      up_down.set(-.5);
-    } else {
-      lift.set(0);
-      intake.set(0);
-      up_down.set(0);
+    if(robotControl != null){
+      robotControl.giveCommands(this);
     }
-    
+
+    if(operatorControl != null){
+      operatorControl.giveCommands(this);
+    }
+
+    publishSubSystemStats();
+}   
+
+//simple accesor methods
+public Drivetrain getDrivetrain(){return drivetrain;};
+public Lift getLift(){return lift;};
+public Ball_intake getBall_intake(){return ball;};
+public Hatch_Intake getHatch_Intake(){return hatch;};
+public Carridge getCarridge(){return carridge;};
+
+private void publishSubSystemStats(){
+
+}
+   
+   //m_robotDrive.arcadeDrive(m_stick.getY(), m_stick.getX());
+
+  /**
+   * This function is called periodically during test mode.
+   */
+  @Override
+  public void testPeriodic() {
   }
 }

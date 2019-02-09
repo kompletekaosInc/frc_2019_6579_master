@@ -14,8 +14,8 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 
 /**
  * Created by Ollie 1/25/19
@@ -29,7 +29,7 @@ public class Drivetrain implements SubSystem {
 
   //sensors
   private ADXRS450_Gyro mr_gyro = null;
-  private UsbCamera camera = null;
+
 
   //Motor Controllers (ports can be changed)
   private Spark leftToughbox = new Spark(0);
@@ -39,32 +39,41 @@ public class Drivetrain implements SubSystem {
   private DifferentialDrive robotDrive = new DifferentialDrive(leftToughbox, rightToughbox);
 
   //neccasary numbers
-  private double distancePerPulse = 0.2493639169;
+ // private double distancePerPulse = 0.2493639169;
   public boolean inMotion = false;
 
   public Drivetrain(){
+
+    new Thread(() -> {
+      UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+      camera.setResolution(256, 144);
+      camera.setFPS(20);
+  }).start();
     //gets the sensors ready to work
     //camera
     try{
-      camera = CameraServer.getInstance().startAutomaticCapture();
-      SmartDashboard.putBoolean("Camera happy and awake", true);
+     
     } catch(Exception e){
       logger.info("Camera not installed correctly, someone stuffed up. Robot: 'not my fault :)'" + e.toString());
-      SmartDashboard.putBoolean("Camera happy and awake", false);
+      Shuffleboard.getTab("Debugging").add("Camera happy and awake", false);
     }
+
+    
     //gyro
     try {
       mr_gyro = new ADXRS450_Gyro();
-      SmartDashboard.putBoolean("Gyro happy and on", true);
+      Shuffleboard.getTab("Debugging").add("Gyro happy and on", true);
       //callibrates the gyro to 0
       mr_gyro.reset();
       mr_gyro.calibrate();
     } catch (Exception e) {
       logger.info("Gyro not installed correctly, someone stuffed up. Robot: 'not my fault :)'");
-      SmartDashboard.putBoolean("Gyro happy and on", false);
+      Shuffleboard.getTab("Debugging").add("Gyro happy and on", false);
     }
 
   };
+
+  
 
  /* this is the method for moving the robot, could be used by arcade drive and auto
   * @param leftPower
@@ -75,6 +84,7 @@ public class Drivetrain implements SubSystem {
     leftToughbox.set(-leftPower);
     //sets the right toughbox
     rightToughbox.set(rightPower);
+    SmartDashboard.putNumber("Power", (rightPower+leftPower)/2);
   }
 
   /**
@@ -83,6 +93,7 @@ public class Drivetrain implements SubSystem {
    */
   public void stop(){
     setPower(0, 0);
+    Shuffleboard.getTab("Debugging").add("Stopping", true);
   }
 
   /**
@@ -92,7 +103,7 @@ public class Drivetrain implements SubSystem {
 
   public void hardStop(){
 
-    double gyroAtStop = mr_gyro.getAngle();
+//    double gyroAtStop = mr_gyro.getAngle();
 
     logger.info("hardstop: initial (leftToughbox:Right) = (" + leftToughbox.get() + ":" + rightToughbox.get() + ")");
     double leftStopPower;
@@ -181,7 +192,7 @@ public class Drivetrain implements SubSystem {
      * @param targetAngle
      * @param left
      */
-    public void curveTurn(double targetAngle, boolean left){
+  /*  public void curveTurn(double targetAngle, boolean left){
       logger.info("curveTurn [" + targetAngle + ":" + left + "]");
       double turnPower = 0.3;
 
@@ -205,7 +216,6 @@ public class Drivetrain implements SubSystem {
     public void turn(double turnAngle, boolean left){
       logger.info("turn [" + turnAngle + ":" + left + "]");
         double turnPower = 0.3;
-        double slowTurnPower = 0.25;
 
         SmartDashboard.putNumber("turn.targetAngle", turnAngle);
         SmartDashboard.putBoolean("turn.left", left);
@@ -235,11 +245,14 @@ public class Drivetrain implements SubSystem {
 
         logger.info("mr. Gyro turn finished hopfully no issues :|");
 
-    }
+    }*/
  
 
+  
   public void arcadeDiffDrive(double stickX, double stickY){
 
+    SmartDashboard.getNumber("Stick X: ", stickX);
+    SmartDashboard.getNumber("Stick Y: ", stickY);
     robotDrive.arcadeDrive(stickY, stickX);
   }
 

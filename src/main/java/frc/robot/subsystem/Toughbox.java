@@ -8,7 +8,6 @@
 package frc.robot.subsystem;
 
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Created by Ollie 1/25/19

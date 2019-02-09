@@ -7,18 +7,24 @@
 
 package frc.robot.subsystem.intakes;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import frc.robot.subsystem.SubSystem;
 
 /**
  * Created by Ollie 1/25/19
  */
-public class Hatch_Intake extends Subsystem {
+public class Hatch_Intake implements SubSystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+//  DoubleSolenoid hatch = new DoubleSolenoid(0, 2);
+
+  public void test(){
+
   }
+
+  public void publishStats(){
+    
+  }
+
 }

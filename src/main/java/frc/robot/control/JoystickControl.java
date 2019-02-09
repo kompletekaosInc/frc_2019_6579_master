@@ -15,6 +15,8 @@ import frc.robot.Robot;
  */
 public abstract class JoystickControl implements RobotControl {
     
+    protected DriverControl driverControl;
+
     protected Joystick stick;
 
     public JoystickControl(int port){
@@ -23,14 +25,15 @@ public abstract class JoystickControl implements RobotControl {
 
     @Override
     public void giveCommands(Robot robot){
-        processStickButton(robot);
-        processThrottle(robot);
+       processStickButton(robot);
+       processThrottle(robot);
     }
 
     private void processStickButton(Robot robot){
 
         if(stick.getRawButton(1)){
             processButton1(robot);
+           
         }
         else if (stick.getRawButton(2)){
             processButton2(robot);
@@ -176,7 +179,7 @@ public abstract class JoystickControl implements RobotControl {
     }
 
     protected void processThrottle(Robot robot){
-
+        
     }
 
 

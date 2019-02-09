@@ -8,6 +8,7 @@
 package frc.robot.subsystem.intakes;
 
 
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.VictorSP;
 import frc.robot.subsystem.SubSystem;
 
@@ -17,8 +18,8 @@ import frc.robot.subsystem.SubSystem;
 public class Ball_intake implements SubSystem {
 
   //motor controllers
-  private VictorSP pullUp_motor = new VictorSP(2);
-  private VictorSP intake_Ball_Motor = new VictorSP(3);
+  private VictorSP pullUp_motor = new VictorSP(6);
+  private Spark intake_Ball_Motor = new Spark(4);
 
   public void intakeUp(double power){
     pullUp_motor.set(-power);
@@ -30,6 +31,10 @@ public class Ball_intake implements SubSystem {
 
   public void intakeSuckIn(double power){
     intake_Ball_Motor.set(power);
+  }
+
+  public void intakeSuckOut(double power){
+    intake_Ball_Motor.set(-power);
   }
 
   @Override
