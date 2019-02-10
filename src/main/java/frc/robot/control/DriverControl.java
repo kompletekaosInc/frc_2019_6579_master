@@ -15,14 +15,14 @@ import frc.robot.subsystem.Drivetrain;
  * Created by Ollie 1/25/19
  */
 public class DriverControl extends JoystickControl {
-    
-    //Driver will be using joystick from port 0
-    public DriverControl(){
+
+    // Driver will be using joystick from port 0
+    public DriverControl() {
         super(0);
     }
 
-    private void arcadeDrive(Drivetrain drivetrain){
-        double throttleValue = (stick.getThrottle()-1)/2;
+    private void arcadeDrive(Drivetrain drivetrain) {
+        double throttleValue = (stick.getThrottle() - 1) / 2;
 
         double newX = stick.getX() * throttleValue;
         double newY = stick.getY() * throttleValue;
@@ -31,65 +31,82 @@ public class DriverControl extends JoystickControl {
         SmartDashboard.putNumber("Stick X", stick.getX());
         SmartDashboard.putNumber("Stick Y", stick.getY());
 
-        try{
-        drivetrain.arcadeDiffDrive(newX, newY);
-        }catch(NullPointerException e){
+        try {
+            drivetrain.arcadeDiffDrive(newX, newY);
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void giveCommands(Robot robot){
+    public void giveCommands(Robot robot) {
         super.giveCommands(robot);
 
         arcadeDrive(robot.getDrivetrain());
     }
-    
-    protected void processButton1(Robot robot ){
+
+    protected void processButton1(Robot robot) {
         SmartDashboard.putNumber("Button Being Pressed (Driver)", 1);
+        // Carridge needs to be changed to .3
+        robot.getBall_intake().intakeSuckIn(.8);
+        robot.getCarridge().takeIn(.3);
     }
 
-    protected void processButton2(Robot robot ) {
+    protected void processButton2(Robot robot) {
         SmartDashboard.putNumber("Button Being Pressed (Driver)", 2);
+        robot.getCarridge().shootOut(.8);
     }
-    protected void processButton3(Robot robot ) {
+
+    protected void processButton3(Robot robot) {
         SmartDashboard.putNumber("Button Being Pressed (Driver)", 3);
     }
-    protected void processButton4(Robot robot ) {
+
+    protected void processButton4(Robot robot) {
         SmartDashboard.putNumber("Button Being Pressed (Driver)", 4);
     }
-    protected void processButton5(Robot robot ) {
+
+    protected void processButton5(Robot robot) {
         SmartDashboard.putNumber("Button Being Pressed (Driver)", 5);
     }
-    protected void processButton6(Robot robot ) {
+
+    protected void processButton6(Robot robot) {
         SmartDashboard.putNumber("Button Being Pressed (Driver)", 6);
     }
-    protected void processButton7(Robot robot ) {
+
+    protected void processButton7(Robot robot) {
         SmartDashboard.putNumber("Button Being Pressed (Driver)", 7);
     }
-    protected void processButton8(Robot robot ) {
+
+    protected void processButton8(Robot robot) {
         SmartDashboard.putNumber("Button Being Pressed (Driver)", 8);
 
     }
-    protected void processButton9(Robot robot ) {
+
+    protected void processButton9(Robot robot) {
         SmartDashboard.putNumber("Button Being Pressed (Driver)", 9);
     }
-    protected void processButton10(Robot robot ) {
+
+    protected void processButton10(Robot robot) {
         SmartDashboard.putNumber("Button Being Pressed (Driver)", 10);
 
     }
+
     protected void processButton11(Robot robot) {
         SmartDashboard.putNumber("Button Being Pressed (Driver)", 11);
+        robot.getHatch_Intake().shootOut();
 
     }
-    protected void processButton12(Robot robot ){
+
+    protected void processButton12(Robot robot) {
         SmartDashboard.putNumber("Button Being Pressed (Driver)", 12);
+        robot.getHatch_Intake().pullIn();
     }
+
     @Override
-    protected void processNoButtons(Robot robot ) {
-        //robot.getLift().stop();
-        SmartDashboard.putNumber("Throttle",stick.getThrottle());
-        SmartDashboard.putNumber("AdjustedThrottle",((stick.getThrottle()-1)/-2));
+    protected void processNoButtons(Robot robot) {
+        // robot.getLift().stop();
+        SmartDashboard.putNumber("Throttle", stick.getThrottle());
+        SmartDashboard.putNumber("AdjustedThrottle", ((stick.getThrottle() - 1) / -2));
         System.out.println("driver no buttons");
 
     }

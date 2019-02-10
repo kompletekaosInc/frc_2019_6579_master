@@ -15,33 +15,34 @@ import frc.robot.subsystem.SubSystem;
  */
 public class Ball_intake implements SubSystem {
 
-  //motor controllers
+  // motor controllers
   private VictorSP pullUp_motor = new VictorSP(6);
   private VictorSP intake_Ball_Motor = new VictorSP(7);
 
-  public void intakeUp(double power){
+  public void intakeUp(double power) {
     pullUp_motor.set(-power);
   }
 
-  public void intakeDown(double power){
+  public void intakeDown(double power) {
     pullUp_motor.set(power);
   }
 
-  public void intakeSuckIn(double power){
+  public void intakeSuckIn(double power) {
     intake_Ball_Motor.set(power);
   }
 
-  public void intakeSuckOut(double power){
+  public void intakeSuckOut(double power) {
     intake_Ball_Motor.set(-power);
   }
 
   @Override
-  public void publishStats(){
+  public void publishStats() {
 
   }
+
   @Override
-  public void test(){
-    
+  public void test() {
+
   }
 
 }

@@ -14,31 +14,38 @@ import edu.wpi.first.wpilibj.VictorSP;
  */
 public class Carridge implements SubSystem {
 
-  VictorSP shootOut = new VictorSP(8);
-//  boolean pressureSwitchEnabled = compressor.getPressureSwitchValue();
-//  double compressorCurrent = compressor.getCompressorCurrent();
+  VictorSP carridgeMotor = new VictorSP(8);
+  private Pneumatics pneumatics;
+  // boolean pressureSwitchEnabled = compressor.getPressureSwitchValue();
+  // double compressorCurrent = compressor.getCompressorCurrent();
 
-
-  public void shootOut(double power){
-    shootOut.set(-power);
-    //pneumatics
+  public void shootOut(double power) {
+    carridgeMotor.set(-power);
+    // pneumatics
+    pneumatics.cylinderOut();
   }
-  //set to proper speeds defined by the carriage team!
+  // set to proper speeds defined by the carriage team!
 
-  public void takeIn(double power){
-   // intake.intakeSuckIn(intakePower);
-    shootOut.set(power);
+  public void takeIn(double power) {
+    // intake.intakeSuckIn(intakePower);
+    carridgeMotor.set(power);
   }
+
+  public void pullPneumaticsBack(){
+    pneumatics.cyclinderIn();
+  }
+
   @Override
-  public void test(){
+  public void test() {
 
   }
 
   @Override
-  public void publishStats(){
+  public void publishStats() {
 
- //   SmartDashboard.putBoolean("Is the pressure switch on the compressor on or off?", pressureSwitchEnabled);
- //   SmartDashboard.putNumber("Compressor Current", compressorCurrent);
+    // SmartDashboard.putBoolean("Is the pressure switch on the compressor on or
+    // off?", pressureSwitchEnabled);
+    // SmartDashboard.putNumber("Compressor Current", compressorCurrent);
 
   }
 }

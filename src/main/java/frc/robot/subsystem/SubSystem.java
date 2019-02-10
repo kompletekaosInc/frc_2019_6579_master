@@ -11,7 +11,7 @@ package frc.robot.subsystem;
  * Created by Ollie 1/25/19
  */
 public interface SubSystem {
-    
+
     /**
      * Any SubSystem must be able to publish statistics about itself when requested.
      * These statistics should be published to the SmartDashboard.
@@ -19,8 +19,9 @@ public interface SubSystem {
     public void publishStats();
 
     /**
-     * This will only get called during test periodic which is only done in the driver station.
-     * This allows us to specifically test a subsystem without affecting our teleop code.
+     * This will only get called during test periodic which is only done in the
+     * driver station. This allows us to specifically test a subsystem without
+     * affecting our teleop code.
      */
     public void test();
 }

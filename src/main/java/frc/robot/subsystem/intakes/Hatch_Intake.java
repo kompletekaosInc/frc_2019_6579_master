@@ -7,6 +7,7 @@
 
 package frc.robot.subsystem.intakes;
 
+import frc.robot.subsystem.Pneumatics;
 import frc.robot.subsystem.SubSystem;
 
 /**
@@ -15,15 +16,24 @@ import frc.robot.subsystem.SubSystem;
 public class Hatch_Intake implements SubSystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
+  private Pneumatics pneumatics;
 
-//  DoubleSolenoid hatch = new DoubleSolenoid(0, 2);
+  // DoubleSolenoid hatch = new DoubleSolenoid(0, 2);
 
-  public void test(){
+  public void shootOut(){
+    pneumatics.cylinderOut();
+  }
+
+  public void pullIn(){
+    pneumatics.cyclinderIn();
+  }
+
+  public void test() {
 
   }
 
-  public void publishStats(){
-    
+  public void publishStats() {
+
   }
 
 }
